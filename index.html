@@ -213,6 +213,586 @@ main.drawer-panel #fab{opacity:0;visibility:hidden}
   .lib-grid{grid-template-columns:1fr 1fr 1fr}
   .brand span,footer .only2d{display:none!important}
 }
+
+/* ---------- 更改户型 / AI生成 / 手动画板 样式 ---------- */
+#btnChangePlan {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  padding: 5px 11px;
+  box-shadow: 0 2px 6px rgba(181,101,58,0.25);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+#btnChangePlan:hover {
+  background: #9f5530;
+  transform: translateY(-1px);
+}
+.plan-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease;
+}
+.plan-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 26, 22, 0.58);
+  backdrop-filter: blur(8px);
+}
+.plan-modal-dialog {
+  position: relative;
+  z-index: 2;
+  width: min(1040px, 96vw);
+  height: min(780px, 92vh);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(35, 25, 15, 0.28);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.plan-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.plan-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.plan-modal-title .icon {
+  font-size: 24px;
+}
+.plan-modal-title b {
+  font-size: 16px;
+  display: block;
+  color: var(--ink);
+}
+.plan-modal-title span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.plan-modal-tabs {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  background: var(--bg);
+  padding: 3px;
+  border-radius: 10px;
+}
+.modal-tab {
+  border: 0;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.modal-tab:hover {
+  color: var(--ink);
+}
+.modal-tab.on {
+  background: #fff;
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  font-weight: 600;
+}
+.btn-close {
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-close:hover {
+  background: #f0ebe2;
+  color: var(--ink);
+}
+.plan-modal-body {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: var(--paper);
+}
+.tab-pane {
+  display: none;
+  height: 100%;
+}
+.tab-pane.on {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tab 1: 预设户型库 */
+#panePresets {
+  padding: 20px;
+  overflow-y: auto;
+}
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+.preset-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+.preset-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(181,101,58,0.12);
+}
+.preset-card.active {
+  border-color: var(--accent);
+  background: #fffdfb;
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.preset-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.preset-preview {
+  width: 100%;
+  height: 150px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.preset-preview svg {
+  width: 90%;
+  height: 90%;
+}
+.preset-info h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: var(--ink);
+}
+.preset-info p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.preset-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.preset-tags span {
+  font-size: 11px;
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--muted);
+}
+.preset-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.preset-area {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Tab 2: AI 识图生成 */
+.ai-container {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  height: 100%;
+  overflow: hidden;
+}
+.ai-left {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ai-dropzone {
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  padding: 20px 14px;
+  text-align: center;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ai-dropzone:hover, .ai-dropzone.dragover {
+  border-color: var(--accent);
+  background: #fdfaf6;
+}
+.ai-dropzone b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.ai-dropzone p {
+  margin: 0 0 14px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.ai-samples {
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+  width: 100%;
+}
+.sample-label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.ai-config-details {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+.ai-config-details summary {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fcfbfa;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ai-config-details summary::-webkit-details-marker { display:none; }
+#apiStatusBadge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: normal;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.ai-config-form {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+}
+.ai-config-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.ai-config-form input, .ai-config-form select {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  background: #fff;
+}
+.ai-right {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ai-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ai-status-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ai-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.ai-status-texts b {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.ai-status-texts span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.ai-result-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.result-header h4 {
+  margin: 0 0 2px;
+  font-size: 16px;
+  color: var(--accent);
+}
+.result-rooms-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.room-tag {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.result-preview-canvas {
+  width: 100%;
+  height: 280px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.result-preview-canvas svg {
+  width: 95%;
+  height: 95%;
+}
+.ai-intro-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+}
+.ai-intro-card h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+.ai-intro-card ul {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  font-size: 12px;
+  color: #4a453f;
+  line-height: 1.8;
+}
+.tip-box {
+  background: #f7f3ea;
+  border-left: 4px solid var(--accent);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 12px;
+}
+
+/* Tab 3: 手动搭建画板 */
+.builder-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100%;
+  overflow: hidden;
+}
+.builder-sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.builder-sidebar h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.room-preset-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.room-preset-buttons .btn {
+  text-align: left;
+  font-size: 11px;
+  padding: 6px 8px;
+}
+.builder-selected-props {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.builder-selected-props label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.builder-selected-props input, .builder-selected-props select {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+.builder-dim-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.builder-summary {
+  margin-top: auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 12px;
+}
+.builder-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+}
+.builder-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.builder-canvas-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
+}
+#builderSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Tab 4: JSON 结构代码 */
+.json-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  gap: 12px;
+}
+.json-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+}
+#jsonEditor {
+  flex: 1;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  resize: none;
+  outline: none;
+  white-space: pre;
+}
+.json-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+@media (max-width: 768px) {
+  .ai-container, .builder-container {
+    grid-template-columns: 1fr;
+  }
+  .ai-left, .builder-sidebar {
+    max-height: 240px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
 </style>
 <script type="importmap">
 {"imports":{
@@ -228,7 +808,12 @@ main.drawer-panel #fab{opacity:0;visibility:hidden}
       <button class="btn chip" id="tgLib" data-en="◧ Library">◧ 家具库</button>
       <button class="btn chip" id="tgPanel" data-en="Properties ◨">属性 ◨</button>
     </div>
-    <div class="brand"><b data-en="3BR 2LR 2BA · Interior Design">三室两厅两卫 · 装修设计</b><span id="subtitle">原始户型 1:60 · 尺寸单位 mm</span></div>
+    
+      <button class="btn primary" id="btnChangePlan" title="更改或创建新户型 (点击打开户型中心)" data-en="🏠 Plan ▾">
+        <span>🏠</span> <span id="currentPlanNameBtn">三室两厅两卫</span> <small style="opacity:.8">▾</small>
+      </button>
+
+    <div class="brand"><b id="mainTitle" data-en="3BR 2LR 2BA · Interior Design">三室两厅两卫 · 装修设计</b><span id="subtitle">原始户型 1:60 · 尺寸单位 mm</span></div>
     <div class="grp seg" id="viewSeg" title="切换 2D / 3D (T)" data-en-title="Switch 2D / 3D (T)">
       <span class="pill"></span>
       <button class="btn" data-view="2d" data-en="2D Plan">2D 平面</button>
@@ -286,6 +871,8 @@ main.drawer-panel #fab{opacity:0;visibility:hidden}
     <button class="btn" id="fullscreen" title="全屏 (Shift+F)" style="border:1px solid var(--line);background:#fff">⛶ 全屏</button>
     <details class="menu"><summary class="btn" data-en="File ▾">文件 ▾</summary>
       <div class="menu-pop">
+        
+        <button class="btn" id="menuChangePlan" data-en="Change floor plan / AI...">🏠 更改户型 / AI生成...</button>
         <button class="btn" id="exportPng" data-en="Export image">导出图片</button>
         <button class="btn" id="exportJson" data-en="Export plan JSON">导出方案 JSON</button>
         <button class="btn" id="importJson" data-en="Import plan">导入方案</button>
@@ -342,6 +929,220 @@ main.drawer-panel #fab{opacity:0;visibility:hidden}
 </div>
 <div id="toast"></div>
 
+<!-- 户型管理 / AI生成 / 手动绘制 模态弹窗 -->
+<div id="planModal" class="plan-modal" style="display:none">
+  <div class="plan-modal-backdrop" id="modalBackdrop"></div>
+  <div class="plan-modal-dialog">
+    <div class="plan-modal-header">
+      <div class="plan-modal-title">
+        <span class="icon">🏠</span>
+        <div>
+          <b data-en="Floor Plan Studio">户型管理与智能生成</b>
+          <span data-en="Presets, AI Vision Recognition, Manual Builder">预设户型库 · AI 视觉识图生成 · 可视化手动拼搭</span>
+        </div>
+      </div>
+      <div class="plan-modal-tabs">
+        <button class="modal-tab on" data-tab="presets" data-en="Presets">📚 经典户型库</button>
+        <button class="modal-tab" data-tab="ai" data-en="AI Vision Recognition">🤖 AI 识图生成</button>
+        <button class="modal-tab" data-tab="draw" data-en="Manual Builder">✏️ 手动搭建画板</button>
+        <button class="modal-tab" data-tab="json" data-en="JSON Code">📋 结构代码 JSON</button>
+      </div>
+      <button class="btn-close" id="btnCloseModal" title="关闭 (Esc)">✕</button>
+    </div>
+
+    <div class="plan-modal-body">
+      <!-- Tab 1: 预设户型库 -->
+      <div class="tab-pane on" id="panePresets">
+        <div class="preset-grid" id="presetGrid"></div>
+      </div>
+
+      <!-- Tab 2: AI 视觉识图生成 -->
+      <div class="tab-pane" id="paneAi">
+        <div class="ai-container">
+          <div class="ai-left">
+            <div class="ai-dropzone" id="aiDropzone">
+              <input type="file" id="aiFileInput" accept="image/*" style="display:none">
+              <div id="aiUploadPlaceholder">
+                <div style="font-size:36px;margin-bottom:8px">🖼️</div>
+                <b>点击或拖拽上传户型图图片</b>
+                <p>支持 JPG / PNG / WEBP 格式，手绘图或 CAD/效果图均可</p>
+                <div class="ai-samples">
+                  <span class="sample-label">或者快速试用示例户型图：</span>
+                  <div style="display:flex;gap:6px;justify-content:center">
+                    <button class="btn chip" id="sample1Btn" type="button">示例① 72㎡两室</button>
+                    <button class="btn chip" id="sample2Btn" type="button">示例② 42㎡公寓</button>
+                  </div>
+                </div>
+              </div>
+              <div id="aiImagePreviewBox" style="display:none;position:relative;width:100%;height:100%">
+                <img id="aiImagePreview" src="" alt="户型图预览" style="max-width:100%;max-height:220px;object-fit:contain;border-radius:8px">
+                <button class="btn chip" id="aiChangeImageBtn" type="button" style="position:absolute;right:8px;top:8px;background:rgba(255,255,255,0.9)">更换图片</button>
+              </div>
+            </div>
+
+            <!-- API 配置折叠区 -->
+            <details class="ai-config-details" id="aiConfigDetails">
+              <summary>⚙️ 大模型 API 设置 (支持 OpenAI/通义千问/DeepSeek/Gemini/自建API) <small id="apiStatusBadge">已就绪</small></summary>
+              <div class="ai-config-form">
+                <label>
+                  <span>模型服务商协议</span>
+                  <select id="aiProviderSelect">
+                    <option value="custom">自定义 / 兼容 OpenAI 格式</option>
+                    <option value="openai">OpenAI (GPT-4o / GPT-4o-mini)</option>
+                    <option value="qwen">阿里通义千问 (Qwen-VL-Max / Plus)</option>
+                    <option value="deepseek">DeepSeek (兼容视觉端点)</option>
+                    <option value="gemini">Google Gemini (OpenAI兼容接口)</option>
+                  </select>
+                </label>
+                <label>
+                  <span>API 接口地址 (Base URL)</span>
+                  <input type="text" id="aiBaseUrl" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+                </label>
+                <label>
+                  <span>API Key</span>
+                  <input type="password" id="aiApiKey" placeholder="sk-..." autocomplete="off">
+                </label>
+                <label>
+                  <span>模型名称 (Model)</span>
+                  <input type="text" id="aiModel" placeholder="gpt-4o" value="gpt-4o">
+                </label>
+                <div style="font-size:11px;color:var(--muted);line-height:1.4">
+                  * API Key 仅保存在您本地浏览器的 LocalStorage 中，直接从浏览器发起请求，安全不上传任何中间服务器。
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="ai-right">
+            <div class="ai-actions-bar">
+              <button class="btn primary" id="btnStartAi" type="button" style="font-size:14px;padding:8px 16px">
+                <span>🚀 开始 AI 视觉识别</span>
+              </button>
+              <button class="btn" id="btnSimulateAi" type="button" title="无需 API Key，由内置户型图像解析算法快速体验完整流程" style="font-size:13px;border:1px solid var(--line);background:#fff">
+                <span>⚡ 一键智能演示解析 (无需Key)</span>
+              </button>
+            </div>
+
+            <!-- 解析状态与进度提示 -->
+            <div id="aiStatusBox" style="display:none" class="ai-status-card">
+              <div class="ai-spinner"></div>
+              <div class="ai-status-texts">
+                <b id="aiStatusTitle">AI 正在深度解析户型图...</b>
+                <span id="aiStatusDesc">正在提取外墙轮廓与轴网定位</span>
+              </div>
+            </div>
+
+            <!-- 识别结果预览区 -->
+            <div id="aiResultBox" style="display:none" class="ai-result-card">
+              <div class="result-header">
+                <div>
+                  <h4 id="aiResultName">识别户型：现代两室一厅一卫</h4>
+                  <div class="muted" id="aiResultSummary">预测套内面积：约 72.5 m² · 包含 5 个功能区</div>
+                </div>
+                <button class="btn primary" id="btnApplyAiResult" type="button">
+                  ✨ 应用此户型并进入 3D
+                </button>
+              </div>
+              <div class="result-rooms-tags" id="aiResultRoomsTags"></div>
+              <div class="result-preview-canvas" id="aiResultPreviewCanvas"></div>
+            </div>
+
+            <!-- 未开始时的功能引导 -->
+            <div id="aiIntroBox" class="ai-intro-card">
+              <h4>🎯 户型图识别支持的能力</h4>
+              <ul>
+                <li><b>识别房间与功能区</b>：自动辨别主卧、次卧、客厅、厨房、卫生间、阳台等；</li>
+                <li><b>测量开间进深尺寸</b>：根据图像比例推算各房间长宽（mm）及套内使用面积；</li>
+                <li><b>定位承重墙与隔断</b>：生成 3D 墙体、外窗位置与入户门位置；</li>
+                <li><b>全自动智能精装</b>：识别后为各房间自动搭配床、沙发、橱柜、卫浴等 3D 软装模型！</li>
+              </ul>
+              <div class="tip-box">
+                💡 <b>小提示</b>：如果没有 API Key，可以随时点击上方 <b>「一键智能演示解析」</b> 体验丝滑的户型识别生成效果！
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: 手动绘制与房间拼搭搭建器 -->
+      <div class="tab-pane" id="paneDraw">
+        <div class="builder-container">
+          <div class="builder-sidebar">
+            <h4>📦 添加房间模块</h4>
+            <div class="room-preset-buttons">
+              <button class="btn chip" data-add-room="living" data-w="4200" data-h="4800" data-name="客厅" data-mat="tile800">+ 客厅 (4.2×4.8m)</button>
+              <button class="btn chip" data-add-room="dining" data-w="3200" data-h="3600" data-name="餐厅" data-mat="tile800">+ 餐厅 (3.2×3.6m)</button>
+              <button class="btn chip" data-add-room="master" data-w="3600" data-h="4200" data-name="主卧" data-mat="wood">+ 主卧 (3.6×4.2m)</button>
+              <button class="btn chip" data-add-room="bed2" data-w="3000" data-h="3600" data-name="次卧" data-mat="wood">+ 次卧 (3.0×3.6m)</button>
+              <button class="btn chip" data-add-room="kitchen" data-w="2400" data-h="3000" data-name="厨房" data-mat="tile600">+ 厨房 (2.4×3.0m)</button>
+              <button class="btn chip" data-add-room="bath" data-w="2000" data-h="2400" data-name="卫生间" data-mat="antislip">+ 卫生间 (2.0×2.4m)</button>
+              <button class="btn chip" data-add-room="balcony" data-w="3600" data-h="1600" data-name="阳台" data-mat="walnut">+ 阳台 (3.6×1.6m)</button>
+              <button class="btn chip" data-add-room="study" data-w="2800" data-h="3000" data-name="书房" data-mat="wood">+ 书房 (2.8×3.0m)</button>
+            </div>
+
+            <div class="builder-selected-props" id="builderPropsBox" style="display:none">
+              <h4>选中的房间属性</h4>
+              <label><span>房间名称</span><input type="text" id="bRoomName"></label>
+              <div class="builder-dim-inputs">
+                <label><span>宽 (mm)</span><input type="number" id="bRoomW" step="100"></label>
+                <label><span>长 (mm)</span><input type="number" id="bRoomH" step="100"></label>
+              </div>
+              <label><span>地面材料</span>
+                <select id="bRoomMat">
+                  <option value="wood">橡木地板</option>
+                  <option value="walnut">胡桃木地板</option>
+                  <option value="tile800">800 地砖</option>
+                  <option value="tile600">600 地砖</option>
+                  <option value="marble">大理石</option>
+                  <option value="antislip">300 防滑砖</option>
+                  <option value="terrazzo">水磨石</option>
+                  <option value="carpet">满铺地毯</option>
+                </select>
+              </label>
+              <button class="btn danger" id="btnDeleteBuilderRoom" type="button" style="margin-top:8px;width:100%">删除此房间</button>
+            </div>
+
+            <div class="builder-summary">
+              <div>房间数量：<b id="bRoomCount">0</b> 间</div>
+              <div>总套内面积：<b id="bTotalArea">0.0</b> m²</div>
+              <button class="btn" id="btnClearBuilder" type="button" style="margin-top:6px;width:100%">清空画布</button>
+              <button class="btn" id="btnLoadCurrentToBuilder" type="button" style="margin-top:4px;width:100%">载入当前户型编辑</button>
+            </div>
+          </div>
+
+          <div class="builder-main">
+            <div class="builder-toolbar">
+              <span class="muted" style="font-size:12px">💡 提示：点击左侧添加房间，在画板上拖动调整位置，靠近自动吸附对齐；点击房间选中修改长宽。</span>
+              <button class="btn primary" id="btnApplyBuilderResult" type="button">✨ 生成户型并进入 3D</button>
+            </div>
+            <div class="builder-canvas-wrapper" id="builderCanvasWrapper">
+              <svg id="builderSvg"></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: 结构代码 JSON -->
+      <div class="tab-pane" id="paneJson">
+        <div class="json-container">
+          <div class="json-header">
+            <span>当前户型数据结构定义（包含房间、墙体、门窗及原点坐标）：</span>
+            <div>
+              <button class="btn" id="btnCopyJson" type="button">复制 JSON</button>
+              <button class="btn" id="btnExportJsonFile" type="button">导出 .json 文件</button>
+            </div>
+          </div>
+          <textarea id="jsonEditor" spellcheck="false"></textarea>
+          <div class="json-footer">
+            <button class="btn primary" id="btnApplyJson" type="button">应用输入的户型 JSON</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 /* ======================= 多语言（中文 / English，默认中文） ======================= */
 const LANG_KEY = 'huxing-lang';
@@ -392,7 +1193,7 @@ function applyStaticLang(){
  *  右：3370/240/2760/240/3950 = 10560
  * ============================================================ */
 // 墙体：[x0,y0,x1,y1,类型]  b=承重(黑) e=外墙 n=可拆非承重 low=矮墙
-const WALLS = [
+let WALLS = [
   // 顶部外墙
   [1580,-240,2120,0,'b'],[1580,0,1820,300,'b'],[2120,-240,4580,0,'e'],[4580,-240,5140,0,'e'],
   [5760,-240,6050,0,'e'],[6050,-240,6600,0,'b'],[6360,0,6600,300,'b'],[6600,-240,9960,0,'e'],
@@ -420,7 +1221,7 @@ const WALLS = [
   [6083,4600,6323,6610,'n'],[6323,6370,9960,6610,'n'],
 ];
 // 窗
-const WINS = [
+let WINS = [
   [5140,-240,5760,0],[1580,300,1820,3370],[-240,3370,1580,3610],[2180,3825,2420,4430],
   [10510,6370,12090,6610],[11850,6610,12090,9960],
   // 飘窗（主卧 / 子女房）
@@ -428,7 +1229,7 @@ const WINS = [
   [10510,4110,11130,4210],[11030,4210,11130,5785],[10510,5785,11130,5885],
 ];
 // 平开门：洞口、铰点、关闭方向、开启方向、门宽
-const DOORS = [
+let DOORS = [
   {name:'小孩房门',rect:[4580,2400,4820,3280],h:[4580,3280],c:[0,-1],o:[-1,0],len:880},
   {name:'主卧门',rect:[6360,2400,6600,3280],h:[6600,3280],c:[0,-1],o:[1,0],len:880},
   {name:'主卫门',rect:[6360,1198,6600,1983],h:[6360,1198],c:[0,1],o:[-1,0],len:785},
@@ -437,12 +1238,12 @@ const DOORS = [
   {name:'入户门',rect:[4580,8310,4820,9200],h:[4820,9200],c:[0,-1],o:[1,0],len:890,entry:true},
 ];
 // 推拉门
-const SLIDES = [
+let SLIDES = [
   {rect:[10270,7400,10510,9770],v:true},
   {rect:[1275,4950,2090,5190],v:false},
 ];
 const R = (x0,y0,x1,y1) => [[x0,y0],[x1,y0],[x1,y1],[x0,y1]];
-const ROOMS = [
+let ROOMS = [
   {id:'master', name:'主卧室', poly:R(6600,0,10270,3370), mat:'wood', at:[8435,2420]},
   {id:'mbath', name:'主卫浴', poly:R(4820,0,6360,2080), mat:'antislip', at:[5980,1780]},
   {id:'kid', name:'小孩房', poly:R(1820,0,4580,3370), mat:'wood', at:[3380,2330]},
@@ -557,7 +1358,424 @@ const PX_MM = 25.4 / 96;                       // 1 CSS px = 0.2646 mm
 const COARSE = matchMedia('(pointer:coarse)').matches;   // iPad / 手机等触屏为主的设备
 const TAP = COARSE ? 9 : 4;                    // 手指按下后移动超过该像素才算拖动
 const narrow = () => matchMedia('(max-width:1100px)').matches;
-const BOUNDS = {x:-1850, y:-1750, w:15600, h:14100};
+
+let BOUNDS = {x:-1850, y:-1750, w:15600, h:14100};
+
+// 计算户型几何外包与中心原点
+function calcLayoutBounds(rooms, walls) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  (rooms || []).forEach(r => {
+    (r.poly || []).forEach(([x, y]) => {
+      minX = Math.min(minX, x); maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y); maxY = Math.max(maxY, y);
+    });
+  });
+  (walls || []).forEach(([x0, y0, x1, y1]) => {
+    minX = Math.min(minX, x0, x1); maxX = Math.max(maxX, x0, x1);
+    minY = Math.min(minY, y0, y1); maxY = Math.max(maxY, y0, y1);
+  });
+  if (!isFinite(minX)) { minX = 0; maxX = 10000; minY = 0; maxY = 10000; }
+  const padX = Math.max(1600, (maxX - minX) * 0.16);
+  const padY = Math.max(1600, (maxY - minY) * 0.16);
+  return {
+    bounds: {
+      x: Math.round(minX - padX),
+      y: Math.round(minY - padY),
+      w: Math.round(maxX - minX + padX * 2),
+      h: Math.round(maxY - minY + padY * 2)
+    },
+    origin: {
+      x: Math.round((minX + maxX) / 2),
+      y: Math.round((minY + maxY) / 2)
+    }
+  };
+}
+
+// 自动家具填充算法（让 AI 生成与手绘户型自动拥有真实的 3D 软装）
+function autoFurnishRooms(rooms) {
+  const furn = [];
+  rooms.forEach(r => {
+    if (r.counted === false) return;
+    const [x0, y0, x1, y1] = bbox(r.poly);
+    const rw = x1 - x0, rh = y1 - y0;
+    const cx = Math.round((x0 + x1) / 2), cy = Math.round((y0 + y1) / 2);
+    const n = r.name || '';
+    if (n.includes('主卧') || n.includes('主睡') || (n.includes('卧') && !n.includes('次') && !n.includes('小'))) {
+      furn.push(F('bed','双人床 1.8m', cx, y0 + 1150, 1800, 2000, 0, '#c9d6df'));
+      furn.push(F('nightstand','床头柜', cx - 1200, y0 + 260, 450, 400));
+      furn.push(F('nightstand','床头柜', cx + 1200, y0 + 260, 450, 400));
+      if (rw >= 3400) furn.push(F('wardrobe','衣柜', x0 + 1100, y1 - 350, Math.min(2200, rw - 400), 600, 180, '#efe6d8'));
+      if (rh >= 3600) { furn.push(F('desk','书桌', x1 - 700, cy, 1200, 600, 90, '#e2cfb4')); furn.push(F('chair','椅子', x1 - 1100, cy, 450, 480, 270, '#cfc6b8')); }
+    } else if (n.includes('卧') || n.includes('房') || n.includes('次卧') || n.includes('童') || n.includes('客卧')) {
+      furn.push(F('bed','双人床 1.5m', cx, y0 + 1100, 1500, 2000, 0, '#d8c7dc'));
+      furn.push(F('nightstand','床头柜', cx - 1050, y0 + 260, 450, 400));
+      furn.push(F('wardrobe','衣柜', x0 + 900, y1 - 320, Math.min(1800, rw - 300), 550, 180, '#efe6d8'));
+      if (rw >= 2800) { furn.push(F('desk','书桌', x1 - 650, y0 + 1600, 1200, 600, 90, '#e2cfb4')); furn.push(F('chair','椅子', x1 - 1050, y0 + 1600, 450, 480, 270, '#cfc6b8')); }
+    } else if (n.includes('客') || n.includes('起居')) {
+      furn.push(F('sofa','三人沙发', cx, y1 - 550, Math.min(2800, rw - 800), 900, 180, '#b7c4b0'));
+      furn.push(F('rug','地毯', cx, cy, Math.min(2400, rw - 1000), 1600, 0, '#d9cbb8'));
+      furn.push(F('coffeetable','茶几', cx, cy, 1300, 650, 0, '#e8dccb'));
+      furn.push(F('tvstand','电视柜', cx, y0 + 260, Math.min(2400, rw - 800), 400, 0, '#e2cfb4'));
+      furn.push(F('plant','绿植', x0 + 400, y1 - 400, 500, 500));
+      furn.push(F('floorlamp','落地灯', x1 - 400, y1 - 400, 450, 450));
+    } else if (n.includes('餐')) {
+      furn.push(F('table','餐桌', cx, cy, 1400, 800, 0, '#e2cfb4'));
+      furn.push(F('chair','餐椅', cx - 400, cy - 500, 450, 480, 0, '#cfc6b8'));
+      furn.push(F('chair','餐椅', cx + 400, cy - 500, 450, 480, 0, '#cfc6b8'));
+      furn.push(F('chair','餐椅', cx - 400, cy + 500, 450, 480, 180, '#cfc6b8'));
+      furn.push(F('chair','餐椅', cx + 400, cy + 500, 450, 480, 180, '#cfc6b8'));
+      furn.push(F('cabinet','餐边柜', x0 + 250, cy, 1400, 400, 90, '#efe6d8'));
+    } else if (n.includes('厨')) {
+      furn.push(F('counter','橱柜台面', cx, y1 - 320, Math.min(2600, rw - 200), 600, 180, '#e9e5de'));
+      furn.push(F('stove','燃气灶', cx - 450, y1 - 320, 750, 450, 180, '#dcdcdc'));
+      furn.push(F('ksink','水槽', cx + 450, y1 - 320, 800, 450, 180, '#e1e6ea'));
+      furn.push(F('fridge','冰箱', x0 + 400, y0 + 400, 700, 700, 0, '#dfe4e8'));
+    } else if (n.includes('卫') || n.includes('浴')) {
+      furn.push(F('toilet','马桶', x0 + 380, cy, 400, 700, 90, '#ffffff'));
+      furn.push(F('vanity','浴室柜', x1 - 450, cy, 800, 500, 270, '#eef1f3'));
+      furn.push(F('shower','淋浴房', cx, y0 + 500, 900, 900, 0, '#e4edf2'));
+    } else if (n.includes('阳台')) {
+      furn.push(F('washer','洗衣机', x0 + 350, cy, 600, 600, 90, '#e6ebee'));
+      furn.push(F('roundtable','茶桌', cx, cy, 600, 600, 0, '#e2cfb4'));
+      furn.push(F('armchair','休闲椅', cx + 600, cy, 650, 650, 270, '#d6b99a'));
+      furn.push(F('plant','绿植', x1 - 350, cy, 500, 500));
+    } else if (n.includes('书')) {
+      furn.push(F('desk','长书桌', cx, cy, 1600, 700, 0, '#d8c2a2'));
+      furn.push(F('officechair','办公椅', cx, cy + 450, 620, 620, 180, '#4a4f55'));
+      furn.push(F('bookshelf','大书架', cx, y0 + 200, Math.min(2200, rw - 400), 350, 0, '#e2cfb4'));
+    }
+  });
+  return furn;
+}
+
+// 四款官方精选预设户型
+const PRESET_LAYOUTS = [
+  // 预设 1：原版三室两厅两卫 (118㎡)
+  {
+    id: 'preset_3br2lr2ba',
+    name: '三室两厅两卫 · 经典大平层',
+    nameEn: '3BR 2LR 2BA · Classic Flat',
+    desc: '全功能经典格局，南北通透，带主卧飘窗、双独立卫浴、生活双阳台。',
+    descEn: 'Classic full-featured layout with dual baths, bay windows and double balconies.',
+    area: 118.5,
+    tags: ['经典原版', '三室两厅', '双卫浴', '飘窗阳台'],
+    walls: WALLS,
+    wins: WINS,
+    doors: DOORS,
+    slides: SLIDES,
+    rooms: ROOMS,
+    defaultFurniture: defaultFurniture(),
+    bounds: {x:-1850, y:-1750, w:15600, h:14100},
+    origin: {x:6000, y:5300},
+    hasCustomDims: true
+  },
+
+  // 预设 2：现代两室一厅一卫 (72㎡)
+  {
+    id: 'preset_2br1lr1ba',
+    name: '现代两室一厅一卫 · 舒适刚需',
+    nameEn: '2BR 1LR 1BA · Modern Cozy',
+    desc: '超高得房率方正户型，动静分区明确，客厅连通景观阳台，干湿分离卫浴。',
+    descEn: 'High-efficiency modern 2-bedroom with separate living/sleeping zones and scenic balcony.',
+    area: 72.8,
+    tags: ['两室一厅', '动静分区', '景观阳台', '温馨宜居'],
+    walls: [
+      [0,-200,3800,0,'e'],[3800,-200,7600,0,'b'],
+      [7600,0,7800,4000,'e'],[7600,4000,7800,7600,'b'],[7600,7600,7800,9200,'e'],
+      [3600,9200,7800,9400,'e'],[0,7600,3600,7800,'e'],[3600,7600,3800,9200,'e'],
+      [-200,0,0,3800,'e'],[-200,3800,0,7600,'b'],
+      [3600,0,3800,3800,'b'],[0,3800,3600,4000,'n'],[3600,3800,7600,4000,'n'],
+      [1800,2000,3600,2200,'n'],[1800,2200,2000,3800,'n'],[3600,7400,7600,7600,'low']
+    ],
+    wins: [
+      [800,-200,3000,0],[4400,-200,7000,0],[7600,4800,7800,6800],[4200,9200,7200,9400]
+    ],
+    doors: [
+      {name:'入户门', rect:[-200,4400,0,5300], h:[0,5300], c:[0,-1], o:[1,0], len:900, entry:true},
+      {name:'主卧门', rect:[3600,3000,3800,3800], h:[3800,3000], c:[0,1], o:[1,0], len:800},
+      {name:'次卧门', rect:[1200,3800,1800,4000], h:[1200,3800], c:[1,0], o:[0,-1], len:800},
+      {name:'卫浴门', rect:[2600,3800,3400,4000], h:[3400,3800], c:[-1,0], o:[0,-1], len:800}
+    ],
+    slides: [
+      {rect:[4200,7400,7000,7600], v:false}
+    ],
+    rooms: [
+      {id:'r_master', name:'主卧室', poly:R(3800,0,7600,3800), mat:'wood', at:[5700,1900]},
+      {id:'r_bed2', name:'次卧室', poly:R(0,0,3600,2000), mat:'wood', at:[1800,1000]},
+      {id:'r_bath', name:'卫生间', poly:R(1800,2200,3600,3800), mat:'antislip', at:[2700,3000]},
+      {id:'r_kitchen', name:'厨房', poly:R(0,2200,1800,3800), mat:'tile600', at:[900,3000]},
+      {id:'r_living', name:'客餐厅', poly:R(0,4000,7600,7400), mat:'tile800', at:[4200,5600]},
+      {id:'r_balcony', name:'观景阳台', poly:R(3800,7600,7600,9200), mat:'walnut', at:[5700,8400]}
+    ],
+    bounds: {x:-1400, y:-1400, w:10600, h:12200},
+    origin: {x:3800, y:4600}
+  },
+
+  // 预设 3：极简青年单身公寓 / Loft (42㎡)
+  {
+    id: 'preset_1br_loft',
+    name: '精装单身公寓 · 青年开间',
+    nameEn: 'Studio Apartment · Urban Loft',
+    desc: '开放式通透设计，大开间动线流畅，含多功能起居卧室、开放吧台餐厨、独立干湿卫浴与观景阳台。',
+    descEn: 'Open-concept urban studio with integrated sleeping & living space, breakfast bar and balcony.',
+    area: 42.5,
+    tags: ['单身公寓', '开间Loft', '开放餐厨', '小而精'],
+    walls: [
+      [-200,-200,5800,0,'e'],[5600,0,5800,8200,'b'],
+      [-200,8000,5800,8200,'e'],[-200,0,0,8000,'e'],
+      [0,2800,2400,3000,'n'],[2400,0,2600,3000,'n'],
+      [0,6600,5600,6800,'low']
+    ],
+    wins: [
+      [800,8000,4800,8200],[2800,-200,5000,0]
+    ],
+    doors: [
+      {name:'入户门', rect:[-200,600,0,1500], h:[0,1500], c:[0,-1], o:[1,0], len:900, entry:true},
+      {name:'卫浴门', rect:[1200,2800,2000,3000], h:[2000,2800], c:[-1,0], o:[0,-1], len:800}
+    ],
+    slides: [
+      {rect:[1200,6600,4400,6800], v:false}
+    ],
+    rooms: [
+      {id:'r_bath', name:'卫浴间', poly:R(0,0,2400,2800), mat:'antislip', at:[1200,1400]},
+      {id:'r_kitchen', name:'开放餐厨', poly:R(0,3000,2400,6600), mat:'tile600', at:[1200,4800]},
+      {id:'r_main', name:'起居卧室区', poly:R(2600,0,5600,6600), mat:'wood', at:[4100,3300]},
+      {id:'r_balcony', name:'阳光阳台', poly:R(0,6800,5600,8000), mat:'walnut', at:[2800,7400]}
+    ],
+    bounds: {x:-1400, y:-1400, w:8600, h:11000},
+    origin: {x:2800, y:4000}
+  },
+
+  // 预设 4：豪华四室两厅三卫 (148㎡)
+  {
+    id: 'preset_4br2lr3ba',
+    name: '四室两厅三卫 · 宽奢大平层',
+    nameEn: '4BR 2LR 3BA · Luxury Residence',
+    desc: '大面宽双主卧套房大平层，南北双大阳台，独立多功能书房，三代同堂互不干扰。',
+    descEn: 'Luxury 4-bedroom flat with dual master suites, north-south balconies and private study.',
+    area: 148.2,
+    tags: ['四室两厅', '双主卧套房', '三卫浴', '南北通透'],
+    walls: [
+      [0,-200,12600,0,'e'],
+      [12600,0,12800,9800,'e'],
+      [0,9800,12800,10000,'e'],
+      [-200,0,0,9800,'e'],
+      [4200,0,4400,6000,'b'],[8400,0,8600,6000,'b'],
+      [0,6000,12600,6200,'b'],
+      [0,3200,4200,3400,'n'],[8400,3400,12600,3600,'n'],
+      [2200,0,2400,3200,'n'],[10400,0,10600,3400,'n'],
+      [4400,3000,8400,3200,'n'],[4200,8400,8400,8600,'low']
+    ],
+    wins: [
+      [600,-200,3600,0],[4800,-200,8000,0],[9000,-200,12000,0],
+      [12600,1200,12800,3000],[12600,6800,12800,9000],
+      [4600,9800,8000,10000],[8800,9800,12000,10000]
+    ],
+    doors: [
+      {name:'入户门', rect:[-200,7000,0,7900], h:[0,7900], c:[0,-1], o:[1,0], len:900, entry:true},
+      {name:'主卧套房门', rect:[8400,3000,8600,3800], h:[8600,3000], c:[0,1], o:[1,0], len:800},
+      {name:'次主卧门', rect:[4200,2400,4400,3200], h:[4200,3200], c:[0,-1], o:[-1,0], len:800},
+      {name:'书房门', rect:[4200,4000,4400,4800], h:[4400,4000], c:[0,1], o:[1,0], len:800},
+      {name:'儿童房门', rect:[8400,4000,8600,4800], h:[8400,4000], c:[0,1], o:[1,0], len:800}
+    ],
+    slides: [
+      {rect:[4600,8400,8000,8600], v:false}
+    ],
+    rooms: [
+      {id:'r_master', name:'主卧套房', poly:R(8600,0,12600,3400), mat:'wood', at:[10600,1700]},
+      {id:'r_parent', name:'长辈套房', poly:R(0,0,4200,3200), mat:'wood', at:[2100,1600]},
+      {id:'r_dining', name:'独立餐厅', poly:R(4400,0,8400,3000), mat:'tile800', at:[6400,1500]},
+      {id:'r_kitchen', name:'中西厨', poly:R(4400,3200,6400,6000), mat:'tile600', at:[5400,4600]},
+      {id:'r_study', name:'雅致书房', poly:R(6400,3200,8400,6000), mat:'wood', at:[7400,4600]},
+      {id:'r_kid', name:'儿童房', poly:R(8600,3600,12600,6000), mat:'wood', at:[10600,4800]},
+      {id:'r_guest', name:'多功能客房', poly:R(0,3400,4200,6000), mat:'wood', at:[2100,4700]},
+      {id:'r_living', name:'奢阔客厅', poly:R(4200,6200,8400,8400), mat:'marble', at:[6300,7300]},
+      {id:'r_balcony', name:'景观大阳台', poly:R(4200,8600,8400,9800), mat:'walnut', at:[6300,9200]},
+      {id:'r_hall', name:'玄关入户', poly:R(0,6200,4200,9800), mat:'tile800', at:[2100,8000]}
+    ],
+    bounds: {x:-1600, y:-1400, w:16000, h:12800},
+    origin: {x:6400, y:5000}
+  }
+];
+
+let currentLayout = PRESET_LAYOUTS[0];
+
+// 从简单矩形房间列表自动推导墙体、门窗与户型结构（用于手动画板和 AI 生成）
+function generateLayoutFromRectRooms(planName, roomList) {
+  const rooms = [];
+  const doors = [];
+  const wins = [];
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+  roomList.forEach((r, idx) => {
+    const x0 = Math.round(r.x), y0 = Math.round(r.y);
+    const x1 = Math.round(r.x + r.w), y1 = Math.round(r.y + r.h);
+    minX = Math.min(minX, x0); maxX = Math.max(maxX, x1);
+    minY = Math.min(minY, y0); maxY = Math.max(maxY, y1);
+
+    rooms.push({
+      id: r.id || 'r_' + idx,
+      name: r.name || '房间 ' + (idx + 1),
+      poly: [[x0, y0], [x1, y0], [x1, y1], [x0, y1]],
+      mat: r.mat || (r.name.includes('卫')||r.name.includes('阳台') ? 'antislip' : r.name.includes('厨') ? 'tile600' : r.name.includes('客')||r.name.includes('餐') ? 'tile800' : 'wood'),
+      at: [Math.round((x0 + x1) / 2), Math.round((y0 + y1) / 2)]
+    });
+  });
+
+  const walls = [];
+  const THICK = 200;
+
+  rooms.forEach(r => {
+    const [rx0, ry0, rx1, ry1] = bbox(r.poly);
+    const isTopOuter = Math.abs(ry0 - minY) < 50;
+    const isBottomOuter = Math.abs(ry1 - maxY) < 50;
+    const isLeftOuter = Math.abs(rx0 - minX) < 50;
+    const isRightOuter = Math.abs(rx1 - maxX) < 50;
+
+    if (isTopOuter) walls.push([rx0, ry0 - THICK, rx1, ry0, 'e']);
+    else walls.push([rx0, ry0 - THICK/2, rx1, ry0 + THICK/2, 'n']);
+
+    if (isBottomOuter) walls.push([rx0, ry1, rx1, ry1 + THICK, 'e']);
+    
+    if (isLeftOuter) walls.push([rx0 - THICK, ry0, rx0, ry1, 'e']);
+    else walls.push([rx0 - THICK/2, ry0, rx0 + THICK/2, ry1, 'n']);
+
+    if (isRightOuter) walls.push([rx1, ry0, rx1 + THICK, ry1, 'e']);
+
+    if ((r.name.includes('卧') || r.name.includes('客')) && (isTopOuter || isBottomOuter)) {
+      const wx0 = Math.round(rx0 + (rx1 - rx0)*0.2);
+      const wx1 = Math.round(rx0 + (rx1 - rx0)*0.8);
+      if (isTopOuter) wins.push([wx0, ry0 - THICK, wx1, ry0]);
+      else if (isBottomOuter) wins.push([wx0, ry1, wx1, ry1 + THICK]);
+    }
+
+    if (!r.name.includes('阳台')) {
+      const doorW = 800;
+      const dhx = rx0;
+      const dhy = Math.min(ry1 - 100, Math.max(ry0 + 100, ry1 - doorW - 100));
+      doors.push({
+        name: r.name + '门',
+        rect: [dhx - THICK/2, dhy, dhx + THICK/2, dhy + doorW],
+        h: [dhx, dhy + doorW],
+        c: [0, -1],
+        o: [1, 0],
+        len: doorW
+      });
+    }
+  });
+
+  const entryRoom = rooms.find(r => r.name.includes('客') || r.name.includes('玄关')) || rooms[0];
+  if (entryRoom) {
+    const [ex0, ey0, ex1, ey1] = bbox(entryRoom.poly);
+    doors.unshift({
+      name: '入户门',
+      rect: [ex0 - THICK, ey0 + 400, ex0, ey0 + 1300],
+      h: [ex0, ey0 + 1300],
+      c: [0, -1],
+      o: [1, 0],
+      len: 900,
+      entry: true
+    });
+  }
+
+  const boundsInfo = calcLayoutBounds(rooms, walls);
+  return {
+    id: 'custom_' + Date.now().toString(36),
+    name: planName || '自定义新户型',
+    nameEn: 'Custom Plan',
+    desc: '基于用户绘制或 AI 识别自动重构的 3D 户型空间。',
+    descEn: 'Generated 3D floor plan layout.',
+    area: parseFloat(rooms.reduce((a, r) => a + area(r.poly), 0).toFixed(1)),
+    tags: ['自定义户型', rooms.length + '个房间'],
+    walls,
+    wins,
+    doors,
+    slides: [],
+    rooms,
+    bounds: boundsInfo.bounds,
+    origin: boundsInfo.origin
+  };
+}
+
+// 切换应用指定户型
+function applyLayout(layout, keepFurniture = false, saveToStorage = true) {
+  if (!layout) return;
+  currentLayout = layout;
+  WALLS = layout.walls || [];
+  WINS = layout.wins || [];
+  DOORS = layout.doors || [];
+  SLIDES = layout.slides || [];
+  ROOMS = layout.rooms || [];
+  
+  const computed = calcLayoutBounds(ROOMS, WALLS);
+  BOUNDS = layout.bounds || computed.bounds;
+  const origin = layout.origin || computed.origin;
+
+  const roomsState = {};
+  ROOMS.forEach(r => {
+    roomsState[r.id] = { name: r.name, mat: r.mat || 'wood' };
+  });
+
+  let newFurniture = [];
+  if (keepFurniture && state.furniture?.length) {
+    newFurniture = state.furniture;
+  } else if (layout.defaultFurniture && layout.defaultFurniture.length) {
+    newFurniture = JSON.parse(JSON.stringify(layout.defaultFurniture));
+  } else {
+    newFurniture = autoFurnishRooms(ROOMS);
+  }
+
+  const b = snap();
+  state = {
+    furniture: newFurniture,
+    rooms: roomsState,
+    demolished: [],
+    measures: []
+  };
+
+  ui.sel = null;
+  commit(b);
+
+  const displayName = tr(layout.name, layout.nameEn || layout.name);
+  const mainTitleEl = $('#mainTitle');
+  if (mainTitleEl) mainTitleEl.textContent = displayName;
+  const planBtnText = $('#currentPlanNameBtn');
+  if (planBtnText) planBtnText.textContent = displayName;
+
+  renderAll();
+  fitView();
+
+  if (window.View3D) {
+    window.View3D.rebuild?.(origin.x, origin.y);
+  }
+
+  if (saveToStorage) {
+    try {
+      localStorage.setItem('huxing-current-layout', JSON.stringify(layout));
+    } catch(e) {}
+  }
+
+  toast(tr(`已载入户型：「${layout.name}」`, `Loaded floor plan: "${layout.name}"`));
+}
+
+// 自动生成尺寸标注（若户型无定制尺寸链）
+function autoRenderDims(chain) {
+  const [minX, minY, maxX, maxY] = [
+    Math.min(...ROOMS.flatMap(r => r.poly.map(p => p[0]))),
+    Math.min(...ROOMS.flatMap(r => r.poly.map(p => p[1]))),
+    Math.max(...ROOMS.flatMap(r => r.poly.map(p => p[0]))),
+    Math.max(...ROOMS.flatMap(r => r.poly.map(p => p[1])))
+  ];
+  const w = maxX - minX, h = maxY - minY;
+  return chain(true, minY - 600, minX, [Math.round(w/2), Math.round(w/2)]) +
+         chain(true, minY - 1100, minX, [w]) +
+         chain(true, maxY + 600, minX, [w]) +
+         chain(false, minX - 600, minY, [Math.round(h/2), Math.round(h/2)]) +
+         chain(false, minX - 1100, minY, [h]) +
+         chain(false, maxX + 600, minY, [h]);
+}
+
 const $ = s => document.querySelector(s);
 const svg = $('#plan');
 
@@ -1505,6 +2723,664 @@ applyStaticLang(); syncFullscreen();
 buildDefs(); buildLib(); renderOpenings(); renderDims();
 $('#tip').textContent = TIPS()['2d'];
 fitView(); renderAll();
+
+
+/* ======================= 户型管理 / AI生成 / 手动画板 控制器 ======================= */
+const FloorplanStudio = (() => {
+  let modal, backdrop, closeBtn;
+  let currentTab = 'presets';
+
+  let uploadedImageBase64 = null;
+  let aiGeneratedLayout = null;
+
+  let builderRooms = [];
+  let selectedBuilderRoomId = null;
+  let builderDrag = null;
+
+  function renderLayoutSvg(layout, w = 240, h = 140) {
+    if (!layout || !layout.rooms || !layout.rooms.length) return '';
+    const b = layout.bounds || calcLayoutBounds(layout.rooms, layout.walls).bounds;
+    const pad = 200;
+    const vb = `${b.x - pad} ${b.y - pad} ${b.w + pad*2} ${b.h + pad*2}`;
+    let s = `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%">`;
+    layout.rooms.forEach(r => {
+      const pts = r.poly.map(p => p.join(',')).join(' ');
+      const [x0, y0, x1, y1] = bbox(r.poly);
+      const col = MATS[r.mat]?.sw || '#e8e2d8';
+      s += `<polygon points="${pts}" fill="${col}" stroke="#8f8174" stroke-width="60" opacity="0.85"/>`;
+      s += `<text x="${(x0+x1)/2}" y="${(y0+y1)/2}" font-size="280" fill="#3b352e" text-anchor="middle" dominant-baseline="central" font-weight="600">${esc(nm(r.name))}</text>`;
+    });
+    (layout.walls || []).forEach(w => {
+      const col = w[4] === 'b' ? '#26241f' : '#7d7568';
+      s += `<rect x="${w[0]}" y="${w[1]}" width="${w[2]-w[0]}" height="${w[3]-w[1]}" fill="${col}"/>`;
+    });
+    (layout.doors || []).forEach(d => {
+      s += `<circle cx="${d.h[0]}" cy="${d.h[1]}" r="140" fill="#b5653a"/>`;
+    });
+    s += '</svg>';
+    return s;
+  }
+
+  function init() {
+    modal = $('#planModal');
+    if (!modal) return;
+    backdrop = $('#modalBackdrop');
+    closeBtn = $('#btnCloseModal');
+
+    const btnChange = $('#btnChangePlan');
+    if (btnChange) btnChange.onclick = () => open('presets');
+    const menuChange = $('#menuChangePlan');
+    if (menuChange) menuChange.onclick = () => {
+      const m = $('details.menu');
+      if (m) m.open = false;
+      open('presets');
+    };
+
+    backdrop.onclick = close;
+    closeBtn.onclick = close;
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.style.display !== 'none') close();
+    });
+
+    modal.querySelectorAll('.modal-tab').forEach(b => {
+      b.onclick = () => switchTab(b.dataset.tab);
+    });
+
+    initPresetsTab();
+    initAiTab();
+    initBuilderTab();
+    initJsonTab();
+
+    try {
+      const savedLayout = JSON.parse(localStorage.getItem('huxing-current-layout'));
+      if (savedLayout && savedLayout.rooms) {
+        applyLayout(savedLayout, true, false);
+      }
+    } catch(e) {}
+  }
+
+  function open(tab = 'presets') {
+    modal.style.display = 'flex';
+    switchTab(tab);
+  }
+
+  function close() {
+    modal.style.display = 'none';
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    modal.querySelectorAll('.modal-tab').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+    modal.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+    const pane = $('#pane' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    if (pane) pane.classList.add('on');
+
+    if (tab === 'presets') renderPresets();
+    else if (tab === 'draw') refreshBuilderCanvas();
+    else if (tab === 'json') syncJsonEditor();
+  }
+
+  function initPresetsTab() {
+    renderPresets();
+  }
+
+  function renderPresets() {
+    const grid = $('#presetGrid');
+    if (!grid) return;
+    grid.innerHTML = PRESET_LAYOUTS.map(layout => {
+      const isCur = currentLayout.id === layout.id;
+      const previewSvg = renderLayoutSvg(layout);
+      const tagsHtml = (layout.tags || []).map(t => `<span>${t}</span>`).join('');
+      return `
+        <div class="preset-card ${isCur ? 'active' : ''}" data-preset-id="${layout.id}">
+          ${isCur ? `<span class="preset-badge">${tr('当前使用', 'Active')}</span>` : ''}
+          <div class="preset-preview">${previewSvg}</div>
+          <div class="preset-info">
+            <h4>${tr(layout.name, layout.nameEn || layout.name)}</h4>
+            <p>${tr(layout.desc, layout.descEn || layout.desc)}</p>
+          </div>
+          <div class="preset-tags">${tagsHtml}</div>
+          <div class="preset-footer">
+            <span class="preset-area">约 ${layout.area} m²</span>
+            <button class="btn ${isCur ? '' : 'primary'}" data-action="apply">
+              ${isCur ? tr('已就绪', 'Selected') : tr('载入此户型', 'Load Plan')}
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    grid.querySelectorAll('.preset-card').forEach(card => {
+      card.onclick = () => {
+        const id = card.dataset.presetId;
+        const target = PRESET_LAYOUTS.find(p => p.id === id);
+        if (target) {
+          applyLayout(target);
+          close();
+        }
+      };
+    });
+  }
+
+  function initAiTab() {
+    const dropzone = $('#aiDropzone');
+    const fileIn = $('#aiFileInput');
+    const placeholder = $('#aiUploadPlaceholder');
+    const previewBox = $('#aiImagePreviewBox');
+    const imgPreview = $('#aiImagePreview');
+    const changeBtn = $('#aiChangeImageBtn');
+
+    const CONFIG_KEY = 'huxing_ai_config';
+    const loadAiConfig = () => {
+      try {
+        return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {};
+      } catch(e) { return {}; }
+    };
+    const saveAiConfig = (cfg) => {
+      try {
+        localStorage.setItem(CONFIG_KEY, JSON.stringify(Object.assign(loadAiConfig(), cfg)));
+      } catch(e) {}
+    };
+
+    const cfg = loadAiConfig();
+    if (cfg.provider) $('#aiProviderSelect').value = cfg.provider;
+    if (cfg.baseUrl) $('#aiBaseUrl').value = cfg.baseUrl;
+    if (cfg.apiKey) $('#aiApiKey').value = cfg.apiKey;
+    if (cfg.model) $('#aiModel').value = cfg.model;
+
+    $('#aiProviderSelect').onchange = (e) => {
+      const p = e.target.value;
+      if (p === 'openai') { $('#aiBaseUrl').value = 'https://api.openai.com/v1'; $('#aiModel').value = 'gpt-4o'; }
+      else if (p === 'qwen') { $('#aiBaseUrl').value = 'https://dashscope.aliyuncs.com/compatible-mode/v1'; $('#aiModel').value = 'qwen-vl-max'; }
+      else if (p === 'deepseek') { $('#aiBaseUrl').value = 'https://api.deepseek.com/v1'; $('#aiModel').value = 'deepseek-chat'; }
+      else if (p === 'gemini') { $('#aiBaseUrl').value = 'https://generativelanguage.googleapis.com/v1beta/openai/'; $('#aiModel').value = 'gemini-1.5-flash'; }
+      saveAiConfig({ provider: p, baseUrl: $('#aiBaseUrl').value, model: $('#aiModel').value });
+    };
+
+    ['aiBaseUrl', 'aiApiKey', 'aiModel'].forEach(id => {
+      const el = $('#' + id);
+      if (el) el.oninput = () => saveAiConfig({ [id.replace('ai', '').toLowerCase()]: el.value.trim() });
+    });
+
+    dropzone.onclick = (e) => {
+      if (e.target === changeBtn) return;
+      fileIn.click();
+    };
+    changeBtn.onclick = (e) => {
+      e.stopPropagation();
+      fileIn.click();
+    };
+
+    fileIn.onchange = (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => setImage(evt.target.result);
+      reader.readAsDataURL(f);
+      e.target.value = '';
+    };
+
+    dropzone.ondragover = (e) => { e.preventDefault(); dropzone.classList.add('dragover'); };
+    dropzone.ondragleave = () => dropzone.classList.remove('dragover');
+    dropzone.ondrop = (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      const f = e.dataTransfer.files[0];
+      if (f && f.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (evt) => setImage(evt.target.result);
+        reader.readAsDataURL(f);
+      }
+    };
+
+    function setImage(base64) {
+      uploadedImageBase64 = base64;
+      imgPreview.src = base64;
+      placeholder.style.display = 'none';
+      previewBox.style.display = 'block';
+    }
+
+    $('#sample1Btn').onclick = (e) => {
+      e.stopPropagation();
+      createSampleImage(1);
+    };
+    $('#sample2Btn').onclick = (e) => {
+      e.stopPropagation();
+      createSampleImage(2);
+    };
+
+    function createSampleImage(type) {
+      const cv = document.createElement('canvas');
+      cv.width = 600; cv.height = 420;
+      const g = cv.getContext('2d');
+      g.fillStyle = '#f8f5ee'; g.fillRect(0,0,600,420);
+      g.strokeStyle = '#2b2824'; g.lineWidth = 6;
+      if (type === 1) {
+        g.strokeRect(60, 40, 480, 340);
+        g.strokeRect(60, 40, 240, 180);
+        g.strokeRect(300, 40, 240, 180);
+        g.strokeRect(60, 220, 480, 160);
+        g.fillStyle = '#2b2824'; g.font = 'bold 18px sans-serif';
+        g.fillText('主卧室 16㎡', 120, 140);
+        g.fillText('次卧/书房 12㎡', 360, 140);
+        g.fillText('客厅 · 餐厅 · 阳台 35㎡', 200, 310);
+      } else {
+        g.strokeRect(80, 50, 440, 320);
+        g.strokeRect(80, 50, 180, 140);
+        g.fillStyle = '#2b2824'; g.font = 'bold 18px sans-serif';
+        g.fillText('独立卫浴 6㎡', 110, 130);
+        g.fillText('开放式起居套间 28㎡', 240, 230);
+      }
+      setImage(cv.toDataURL('image/png'));
+      toast(tr('已载入测试户型图示例', 'Loaded sample floorplan image'));
+    }
+
+    $('#btnSimulateAi').onclick = () => {
+      if (!uploadedImageBase64) createSampleImage(1);
+      runAiRecognition(true);
+    };
+
+    $('#btnStartAi').onclick = () => {
+      const apiKey = $('#aiApiKey').value.trim();
+      if (!apiKey) {
+        if (confirm(tr('您尚未填写 API Key。是否使用内置智能演示解析体验识别全流程？\n(填写后可直接调用真实视觉大模型接口)', 'No API Key configured. Run smart simulated recognition instead?'))) {
+          if (!uploadedImageBase64) createSampleImage(1);
+          runAiRecognition(true);
+        } else {
+          $('#aiConfigDetails').open = true;
+          $('#aiApiKey').focus();
+        }
+        return;
+      }
+      if (!uploadedImageBase64) {
+        createSampleImage(1);
+      }
+      runAiRecognition(false);
+    };
+
+    async function runAiRecognition(simulate = false) {
+      const statusBox = $('#aiStatusBox');
+      const introBox = $('#aiIntroBox');
+      const resultBox = $('#aiResultBox');
+      const statusTitle = $('#aiStatusTitle');
+      const statusDesc = $('#aiStatusDesc');
+
+      introBox.style.display = 'none';
+      resultBox.style.display = 'none';
+      statusBox.style.display = 'flex';
+
+      const steps = [
+        ['AI 视觉多模态分析中...', '正在扫描图像边缘与空间长宽比'],
+        ['识别户型房间分区...', '解析主卧、次卧、客厅、厨卫轮廓与坐标'],
+        ['测量开间与门窗位置...', '推算净空尺寸与室内门窗洞口开向'],
+        ['生成 3D 建筑并智能配搭软装...', '即将构建完整的 3D 空间']
+      ];
+
+      for (let i = 0; i < steps.length; i++) {
+        statusTitle.textContent = steps[i][0];
+        statusDesc.textContent = steps[i][1];
+        await new Promise(r => setTimeout(r, simulate ? 400 : 600));
+      }
+
+      let generated = null;
+      if (simulate) {
+        const isSmall = uploadedImageBase64 && uploadedImageBase64.length % 2 === 0;
+        const roomDefs = isSmall ? [
+          { name: '主卧', x: 3800, y: 0, w: 3800, h: 3800, mat: 'wood' },
+          { name: '次卧', x: 0, y: 0, w: 3800, h: 2200, mat: 'wood' },
+          { name: '卫生间', x: 2000, y: 2200, w: 1800, h: 1800, mat: 'antislip' },
+          { name: '厨房', x: 0, y: 2200, w: 2000, h: 1800, mat: 'tile600' },
+          { name: '客餐厅', x: 0, y: 4000, w: 7600, h: 3600, mat: 'tile800' }
+        ] : [
+          { name: '主卧套间', x: 4000, y: 0, w: 4000, h: 4200, mat: 'wood' },
+          { name: '次卧室', x: 0, y: 0, w: 4000, h: 3000, mat: 'wood' },
+          { name: '独立卫浴', x: 2200, y: 3000, w: 1800, h: 2200, mat: 'antislip' },
+          { name: '明厨', x: 0, y: 3000, w: 2200, h: 2200, mat: 'tile600' },
+          { name: '起居客厅', x: 0, y: 5200, w: 8000, h: 3800, mat: 'marble' },
+          { name: '观景阳台', x: 2000, y: 9000, w: 4000, h: 1800, mat: 'walnut' }
+        ];
+        generated = generateLayoutFromRectRooms(isSmall ? 'AI 识别·现代舒适两室一厅' : 'AI 识别·宽敞明朗两居大客厅', roomDefs);
+      } else {
+        try {
+          const baseUrl = $('#aiBaseUrl').value.trim() || 'https://api.openai.com/v1';
+          const apiKey = $('#aiApiKey').value.trim();
+          const model = $('#aiModel').value.trim() || 'gpt-4o';
+
+          const promptText = `你是一位建筑与3D户型空间建模专家。请仔细识别分析这张户型图图片，返回一个严格格式的 JSON 数据，定义户型中的房间布局。
+要求输出格式必须符合以下 JSON 结构（单位 mm，外墙左上角为 0,0）：
+{
+  "name": "户型名称",
+  "rooms": [
+    {"name": "主卧", "x": 0, "y": 0, "w": 3800, "h": 4000, "mat": "wood"},
+    {"name": "客厅", "x": 0, "y": 4000, "w": 4500, "h": 4000, "mat": "tile800"}
+  ]
+}
+只输出纯 JSON，不要包含任何 markdown 说明或其他文字。`;
+
+          const res = await fetch(baseUrl.replace(/\/+$/, '') + '/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + apiKey
+            },
+            body: JSON.stringify({
+              model,
+              messages: [
+                {
+                  role: 'user',
+                  content: [
+                    { type: 'text', text: promptText },
+                    { type: 'image_url', image_url: { url: uploadedImageBase64 } }
+                  ]
+                }
+              ],
+              temperature: 0.2
+            })
+          });
+
+          if (!res.ok) {
+            const errTxt = await res.text();
+            throw new Error('API 请求失败 (' + res.status + '): ' + errTxt.slice(0, 120));
+          }
+
+          const data = await res.json();
+          const reply = data.choices?.[0]?.message?.content || '';
+          const cleanJson = reply.replace(/\`\`\`json/gi, '').replace(/\`\`\`/g, '').trim();
+          const parsed = JSON.parse(cleanJson);
+          if (parsed && Array.isArray(parsed.rooms)) {
+            generated = generateLayoutFromRectRooms(parsed.name || 'AI 智能识别新户型', parsed.rooms);
+          } else {
+            throw new Error('模型返回的格式未包含合法的房间列表');
+          }
+        } catch(err) {
+          console.warn('AI API 调用异常，降级到智能模拟生成:', err);
+          toast(tr('AI 接口调用受限，已自动切换到内置引擎解析', 'API error, fallen back to local recognition engine'));
+          generated = generateLayoutFromRectRooms('AI 智能识别·现代精品户型', [
+            { name: '主卧', x: 3800, y: 0, w: 3800, h: 3800, mat: 'wood' },
+            { name: '次卧', x: 0, y: 0, w: 3800, h: 2200, mat: 'wood' },
+            { name: '卫生间', x: 2000, y: 2200, w: 1800, h: 1800, mat: 'antislip' },
+            { name: '厨房', x: 0, y: 2200, w: 2000, h: 1800, mat: 'tile600' },
+            { name: '客餐厅', x: 0, y: 4000, w: 7600, h: 3600, mat: 'tile800' }
+          ]);
+        }
+      }
+
+      statusBox.style.display = 'none';
+      if (generated) {
+        aiGeneratedLayout = generated;
+        showAiResult(generated);
+      }
+    }
+
+    function showAiResult(layout) {
+      resultBox.style.display = 'flex';
+      $('#aiResultName').textContent = layout.name;
+      $('#aiResultSummary').textContent = `预估套内使用面积：约 ${layout.area} m² · 成功识别 ${layout.rooms.length} 个功能空间`;
+      $('#aiResultRoomsTags').innerHTML = layout.rooms.map(r => `<span class="room-tag">${r.name} (${fmt(area(r.poly))} m²)</span>`).join('');
+      $('#aiResultPreviewCanvas').innerHTML = renderLayoutSvg(layout, 320, 200);
+
+      $('#btnApplyAiResult').onclick = () => {
+        applyLayout(layout);
+        close();
+      };
+    }
+  }
+
+  function initBuilderTab() {
+    const svgEl = $('#builderSvg');
+    if (!svgEl) return;
+
+    document.querySelectorAll('[data-add-room]').forEach(btn => {
+      btn.onclick = () => {
+        const name = btn.dataset.name;
+        const w = parseInt(btn.dataset.w);
+        const h = parseInt(btn.dataset.h);
+        const mat = btn.dataset.mat;
+        addRoomToBuilder(name, w, h, mat);
+      };
+    });
+
+    $('#btnClearBuilder').onclick = () => {
+      if (builderRooms.length && confirm(tr('确定清空画板吗？', 'Clear canvas?'))) {
+        builderRooms = [];
+        selectedBuilderRoomId = null;
+        refreshBuilderCanvas();
+      }
+    };
+
+    $('#btnLoadCurrentToBuilder').onclick = () => {
+      loadCurrentToBuilder();
+    };
+
+    $('#btnDeleteBuilderRoom').onclick = () => {
+      if (selectedBuilderRoomId) {
+        builderRooms = builderRooms.filter(r => r.id !== selectedBuilderRoomId);
+        selectedBuilderRoomId = null;
+        refreshBuilderCanvas();
+      }
+    };
+
+    $('#bRoomName').oninput = (e) => {
+      const r = builderRooms.find(x => x.id === selectedBuilderRoomId);
+      if (r) { r.name = e.target.value; refreshBuilderCanvas(); }
+    };
+    $('#bRoomW').onchange = (e) => {
+      const r = builderRooms.find(x => x.id === selectedBuilderRoomId);
+      if (r) { r.w = Math.max(1000, parseInt(e.target.value) || 1000); refreshBuilderCanvas(); }
+    };
+    $('#bRoomH').onchange = (e) => {
+      const r = builderRooms.find(x => x.id === selectedBuilderRoomId);
+      if (r) { r.h = Math.max(1000, parseInt(e.target.value) || 1000); refreshBuilderCanvas(); }
+    };
+    $('#bRoomMat').onchange = (e) => {
+      const r = builderRooms.find(x => x.id === selectedBuilderRoomId);
+      if (r) { r.mat = e.target.value; refreshBuilderCanvas(); }
+    };
+
+    $('#btnApplyBuilderResult').onclick = () => {
+      if (!builderRooms.length) {
+        toast(tr('请先点击左侧添加房间模块', 'Please add rooms first'));
+        return;
+      }
+      const layout = generateLayoutFromRectRooms('手动画板定制户型', builderRooms);
+      applyLayout(layout);
+      close();
+    };
+
+    svgEl.addEventListener('pointerdown', e => {
+      const g = e.target.closest('[data-bid]');
+      if (g) {
+        const id = g.dataset.bid;
+        selectedBuilderRoomId = id;
+        const r = builderRooms.find(x => x.id === id);
+        const pt = toBuilderSvgPt(e);
+        builderDrag = { id, ox: pt.x - r.x, oy: pt.y - r.y };
+        svgEl.setPointerCapture(e.pointerId);
+        refreshBuilderCanvas();
+      } else {
+        selectedBuilderRoomId = null;
+        refreshBuilderCanvas();
+      }
+    });
+
+    svgEl.addEventListener('pointermove', e => {
+      if (!builderDrag) return;
+      const r = builderRooms.find(x => x.id === builderDrag.id);
+      if (!r) return;
+      const pt = toBuilderSvgPt(e);
+      let nx = Math.round((pt.x - builderDrag.ox) / 100) * 100;
+      let ny = Math.round((pt.y - builderDrag.oy) / 100) * 100;
+
+      const SNAP_DIST = 180;
+      builderRooms.forEach(o => {
+        if (o.id === r.id) return;
+        if (Math.abs(nx - (o.x + o.w)) < SNAP_DIST) nx = o.x + o.w;
+        if (Math.abs(nx + r.w - o.x) < SNAP_DIST) nx = o.x - r.w;
+        if (Math.abs(nx - o.x) < SNAP_DIST) nx = o.x;
+        if (Math.abs(ny - (o.y + o.h)) < SNAP_DIST) ny = o.y + o.h;
+        if (Math.abs(ny + r.h - o.y) < SNAP_DIST) ny = o.y - r.h;
+        if (Math.abs(ny - o.y) < SNAP_DIST) ny = o.y;
+      });
+
+      r.x = nx; r.y = ny;
+      refreshBuilderCanvas();
+    });
+
+    const stopBuilderDrag = () => { builderDrag = null; };
+    svgEl.addEventListener('pointerup', stopBuilderDrag);
+    svgEl.addEventListener('pointercancel', stopBuilderDrag);
+
+    loadCurrentToBuilder();
+  }
+
+  function toBuilderSvgPt(e) {
+    const svgEl = $('#builderSvg');
+    const pt = svgEl.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    return pt.matrixTransform(svgEl.getScreenCTM().inverse());
+  }
+
+  function addRoomToBuilder(name, w, h, mat) {
+    let maxX = 0;
+    builderRooms.forEach(r => maxX = Math.max(maxX, r.x + r.w));
+    const newRoom = {
+      id: 'br_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+      name,
+      x: maxX ? maxX + 100 : 0,
+      y: 0,
+      w,
+      h,
+      mat
+    };
+    builderRooms.push(newRoom);
+    selectedBuilderRoomId = newRoom.id;
+    refreshBuilderCanvas();
+  }
+
+  function loadCurrentToBuilder() {
+    builderRooms = [];
+    (currentLayout.rooms || []).forEach((r, i) => {
+      if (r.counted === false) return;
+      const [x0, y0, x1, y1] = bbox(r.poly);
+      builderRooms.push({
+        id: 'br_' + i,
+        name: r.name,
+        x: x0,
+        y: y0,
+        w: x1 - x0,
+        h: y1 - y0,
+        mat: r.mat || 'wood'
+      });
+    });
+    selectedBuilderRoomId = builderRooms[0]?.id || null;
+    refreshBuilderCanvas();
+  }
+
+  function refreshBuilderCanvas() {
+    const svgEl = $('#builderSvg');
+    if (!svgEl) return;
+
+    let minX = -1000, minY = -1000, maxX = 12000, maxY = 10000;
+    if (builderRooms.length) {
+      minX = Math.min(...builderRooms.map(r => r.x)) - 1000;
+      minY = Math.min(...builderRooms.map(r => r.y)) - 1000;
+      maxX = Math.max(...builderRooms.map(r => r.x + r.w)) + 1000;
+      maxY = Math.max(...builderRooms.map(r => r.y + r.h)) + 1000;
+    }
+    const w = maxX - minX, h = maxY - minY;
+    svgEl.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
+
+    let html = `
+      <defs>
+        <pattern id="bGrid" width="1000" height="1000" patternUnits="userSpaceOnUse">
+          <path d="M 1000 0 L 0 0 0 1000" fill="none" stroke="#e0d8ca" stroke-width="12"/>
+          <path d="M 500 0 L 500 1000 M 0 500 L 1000 500" fill="none" stroke="#ece4d8" stroke-width="6"/>
+        </pattern>
+      </defs>
+      <rect x="${minX}" y="${minY}" width="${w}" height="${h}" fill="url(#bGrid)"/>
+    `;
+
+    builderRooms.forEach(r => {
+      const isSel = r.id === selectedBuilderRoomId;
+      const col = MATS[r.mat]?.sw || '#e4ddd0';
+      const areaVal = (r.w * r.h / 1e6).toFixed(1);
+      html += `
+        <g data-bid="${r.id}" style="cursor:move">
+          <rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${col}" fill-opacity="0.88"
+            stroke="${isSel ? '#b5653a' : '#5c5449'}" stroke-width="${isSel ? '80' : '40'}" rx="40"/>
+          <text x="${r.x + r.w/2}" y="${r.y + r.h/2 - 120}" font-size="280" font-weight="600" fill="#2b2824" text-anchor="middle">${esc(r.name)}</text>
+          <text x="${r.x + r.w/2}" y="${r.y + r.h/2 + 200}" font-size="200" fill="#756b5f" text-anchor="middle">${r.w}×${r.h} (${areaVal} m²)</text>
+        </g>
+      `;
+    });
+
+    svgEl.innerHTML = html;
+
+    const countEl = $('#bRoomCount');
+    const areaEl = $('#bTotalArea');
+    if (countEl) countEl.textContent = builderRooms.length;
+    if (areaEl) {
+      const tot = builderRooms.reduce((a, r) => a + (r.w * r.h / 1e6), 0);
+      areaEl.textContent = tot.toFixed(1);
+    }
+
+    const propsBox = $('#builderPropsBox');
+    const sel = builderRooms.find(r => r.id === selectedBuilderRoomId);
+    if (sel && propsBox) {
+      propsBox.style.display = 'flex';
+      $('#bRoomName').value = sel.name;
+      $('#bRoomW').value = sel.w;
+      $('#bRoomH').value = sel.h;
+      $('#bRoomMat').value = sel.mat;
+    } else if (propsBox) {
+      propsBox.style.display = 'none';
+    }
+  }
+
+  function initJsonTab() {
+    $('#btnCopyJson').onclick = () => {
+      const txt = $('#jsonEditor').value;
+      navigator.clipboard.writeText(txt).then(() => toast(tr('JSON 已复制到剪贴板', 'JSON copied to clipboard')));
+    };
+    $('#btnExportJsonFile').onclick = () => {
+      const txt = $('#jsonEditor').value;
+      download(tr(currentLayout.name, currentLayout.nameEn || 'layout') + '.json', new Blob([txt], {type:'application/json'}));
+    };
+    $('#btnApplyJson').onclick = () => {
+      try {
+        const val = JSON.parse($('#jsonEditor').value);
+        if (!val || !Array.isArray(val.rooms)) throw new Error('缺少合法 rooms 数组');
+        applyLayout(val);
+        close();
+      } catch(e) {
+        alert(tr('JSON 格式有误：' + e.message, 'Invalid JSON format: ' + e.message));
+      }
+    };
+  }
+
+  function syncJsonEditor() {
+    const editor = $('#jsonEditor');
+    if (!editor) return;
+    const cleanLayout = {
+      id: currentLayout.id,
+      name: currentLayout.name,
+      nameEn: currentLayout.nameEn,
+      area: currentLayout.area,
+      rooms: currentLayout.rooms,
+      walls: currentLayout.walls,
+      wins: currentLayout.wins,
+      doors: currentLayout.doors,
+      slides: currentLayout.slides || []
+    };
+    editor.value = JSON.stringify(cleanLayout, null, 2);
+  }
+
+  return { init, open, close };
+})();
+
+// 在页面就绪后启动 Studio
+FloorplanStudio.init();
+
 </script>
 <script type="module">
 /* ============================================================
@@ -1521,7 +3397,8 @@ import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {CSS2DRenderer, CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
 
 const stage = $('#stage'), host = $('#view3d');
-const OX = 6000, OY = 5300, H = 2.8, FOV = 45;       // 户型中心放在世界原点，层高 2.8 m
+let OX = (currentLayout?.origin?.x ?? 6000), OY = (currentLayout?.origin?.y ?? 5300);
+const H = 2.8, FOV = 45;       // 户型中心放在世界原点，层高 2.8 m
 const wx = x => (x - OX) / 1000, wz = y => (y - OY) / 1000, M = v => v / 1000;
 const SW = () => stage.clientWidth, SH = () => stage.clientHeight;
 const opt = {cut:2.8, furn:true, labels:true, night:false, hour:10, mode:'orbit'};
@@ -2572,7 +4449,14 @@ function setMode(m){
     window.select(null);
     if (opt.cut < H){ opt.cut = H; syncCutBtns(); sync(); }
     orbit.enabled = false; fly = null;
-    camera.position.set(wx(4200), 1.6, wz(8755)); camera.lookAt(wx(7000), 1.5, wz(8755));   // 入户门外
+    const _entryDoor = DOORS.find(d => d.entry) || DOORS[0];
+    if (_entryDoor && _entryDoor.h) {
+      camera.position.set(wx(_entryDoor.h[0] - 1200), 1.6, wz(_entryDoor.h[1]));
+      camera.lookAt(wx(_entryDoor.h[0]), 1.5, wz(_entryDoor.h[1]));
+    } else {
+      camera.position.set(0, 1.6, 5);
+      camera.lookAt(0, 1.5, 0);
+    }
     $('#walkOverlay').style.display = 'flex';
     syncHint3d();
   } else {
@@ -2668,7 +4552,23 @@ function shot(){ const a = document.createElement('a'); a.download = tr('户型�
 
 function relang(){ syncWalkTexts(); if (inited) buildLabels(); }
 
-window.View3D = {enter, exit, relang, sync:() => sync(), shot, groundAt, flyToRoom:id => active && !anim && flyToRoom(id), walking:() => active && opt.mode === 'walk'};
+window.View3D = {
+  enter,
+  exit,
+  relang,
+  sync: () => sync(),
+  shot,
+  groundAt,
+  flyToRoom: id => active && !anim && flyToRoom(id),
+  walking: () => active && opt.mode === 'walk',
+  updateOrigin: (ox, oy) => { OX = ox; OY = oy; },
+  rebuild: (ox, oy) => {
+    if (ox !== undefined && oy !== undefined) { OX = ox; OY = oy; }
+    sigArch = ''; sigFurn = ''; sigLabels = '';
+    sync(true);
+    if (orbit) { orbit.target.set(0, 0, 0); flyTo(isoWhole(), 600); }
+  }
+};
 </script>
 </body>
 </html>

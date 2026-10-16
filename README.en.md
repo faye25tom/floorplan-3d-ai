@@ -1,10 +1,28 @@
-# Floor Plan Interior Designer
+# AI Floorplan 3D Studio
 
 [中文](README.md) | English
+
+> [!NOTE]
+> **Acknowledgement & Open Source Notice**: This project is forked and enhanced based on the original open-source work by [wy51ai/floorplan-3d](https://github.com/wy51ai/floorplan-3d). Sincere gratitude to the original author [@akokoi1](https://x.com/akokoi1) for creating and open-sourcing the remarkable 3D floor plan renderer and material system!
+> This project builds upon it with: **AI Vision Multi-modal Floor Plan Recognition**, **Interactive Manual Floor Plan Builder**, **Multi-preset Layout Studio**, and **Auto-Furnish 3D Algorithms**.
 
 A pure front-end tool for interior design on a floor plan: place furniture, remove or modify walls, and take measurements on a 2D plan, then switch to a Three.js 3D scene with one click — view it from above or walk through it in first person. The whole app is a single `index.html`: no build step, just open it.
 
 ## Features
+
+**Floor Plan Studio (New)**
+- **Top Bar Entrance**: Click `🏠 Floor Plan` on the top bar to open the **Floor Plan Studio** modal
+- **Preset Library**: Built-in 4 full-featured floor plans (Classic 3-Bedroom 118㎡, Modern Cozy 2-Bedroom 72㎡, Urban Studio Loft 42㎡, Luxury 4-Bedroom 148㎡) with instant hot-switching
+- **AI Vision Recognition**:
+  - Upload floor plan images (hand-drawn sketches, CAD drawings, real estate posters)
+  - Connect directly to Vision LLMs (OpenAI GPT-4o, Alibaba Qwen-VL, DeepSeek, Google Gemini, etc.) to automatically extract rooms, walls, dimensions, and doors
+  - **One-click Smart Simulated Demo**: Experience full AI recognition without an API key
+- **Manual Drawing Canvas**:
+  - Interactive modular room builder: easily add Living Room, Bedrooms, Kitchen, Bath, Balcony, Study
+  - Free drag-and-drop with 100mm grid snap and automatic wall-to-wall snapping, real-time area calculation
+  - One-click load current plan for rapid renovations
+- **Auto-Furnish Algorithm**: For both AI-generated and hand-drawn floor plans, the system automatically decorates rooms with beds, wardrobes, sofas, dining tables, kitchen counters, and sanitary ware for an instant 3D walkthrough!
+- **JSON Structure Code**: View, edit, copy, and export/import floor plan JSON definitions in real-time
 
 **2D Floor Plan**
 - Displays the original floor plan at 1:60 / 1:100 scale, dimensions in mm
